@@ -1,0 +1,83 @@
+    :root {
+      --bg: #0b0d12;         /* dark slate */
+      --card: #11151c;
+      --text: #e8edf2;
+      --muted: #9aa7b2;
+      --accent: #48a9ff;     /* cyan/blue */
+      --accent-2: #7af0b6;   /* mint for subtle highlights */
+      --border: #1b222c;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7fbff;
+        --card: #ffffff;
+        --text: #0f1720;
+        --muted: #4a5662;
+        --accent: #1167e8;
+        --accent-2: #0f9960;
+        --border: #e6edf5;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji"; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
+    header {
+      display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 0 12px; border-bottom:1px solid var(--border);
+    }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .logo {
+      width:40px; height:40px; border-radius:10px; display:grid; place-items:center;
+      color:var(--text); background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      font-weight:700; letter-spacing:0.5px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+    nav { display:flex; flex-wrap:wrap; gap:14px; }
+    nav a { padding:8px 10px; border-radius:10px; }
+    nav a:focus, nav a:hover { background: var(--border); text-decoration:none; }
+    .hero {
+      display:grid; grid-template-columns: 1.1fr 0.9fr; gap:28px; padding:34px 0 8px;
+    }
+    .hero h1 { font-size: clamp(28px, 4.2vw, 48px); line-height:1.15; margin:0 0 10px; }
+    .pill {
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); color:var(--muted); font-size:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+    }
+    .hero p { color: var(--muted); margin:10px 0 18px; }
+    .cta { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn {
+      display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px; border:1px solid var(--border);
+      background: var(--card); color:var(--text); font-weight:600; text-decoration:none;
+      transition: transform .05s ease, box-shadow .2s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,.15);
+    }
+    .btn:hover { transform: translateY(-1px); text-decoration:none; }
+    .btn.primary { background: linear-gradient(135deg,var(--accent), var(--accent-2)); color:#081018; border-color: transparent; }
+    .grid { display:grid; gap:18px; grid-template-columns: repeat(12, 1fr); }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius:16px; padding:18px;
+    }
+    .card h3 { margin:0 0 8px; font-size: 18px; }
+    .muted { color: var(--muted); }
+    .list { margin:8px 0 0; padding:0; list-style:none; }
+    .list li { padding:8px 0; border-top:1px dashed var(--border); }
+    .list li:first-child { border-top:0; }
+    .two { grid-column: span 6; }
+    .three { grid-column: span 4; }
+    .full { grid-column: 1 / -1; }
+    .kpi { display:flex; gap:18px; flex-wrap:wrap; margin-top:6px; }
+    .kpi div {
+      min-width: 120px; background: var(--card); border: 1px solid var(--border); border-radius:12px; padding:10px 12px;
+    }
+    footer { margin-top:40px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:14px; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .tag { font-size:12px; color: var(--muted); border:1px solid var(--border); padding:2px 8px; border-radius:999px; }
+    .avatar {
+      width:38px; height:38px; border-radius:50%; background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:inline-block; vertical-align:middle; margin-right:10px;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .two, .three { grid-column: 1 / -1; }
+    }
