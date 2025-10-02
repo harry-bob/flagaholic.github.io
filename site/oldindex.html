@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flagaholic — Hong Kong CTF Team</title>
+  <meta name="description" content="Flagaholic is a Hong Kong-based Capture The Flag (CTF) team. We play web, crypto, forensics, reverse engineering, and misc. Join us for writeups, tooling, and team progress." />
+  <meta name="keywords" content="CTF, Capture The Flag, cybersecurity, hacking, Hong Kong, Flagaholic, writeups, security research" />
+  <link rel="icon" href="../assets/favicon.ico" />
+  <!-- this is for og -->
+  <meta property="og:title" content="Flagaholic — Hong Kong CTF Team" />
+  <meta property="og:description" content="Hong Kong-based CTF team. Web · Rev · Crypto · Forensics · Misc." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://flagaholic.github.io/" />
+  <meta property="og:image" content="https://flagaholic.github.io/assets/og-image.png" />
+  <!-- this is for twitter which we will probably never use :skull: -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Flagaholic — Hong Kong CTF Team" />
+  <meta name="twitter:description" content="Hong Kong-based CTF team. Web · Rev · Crypto · Forensics · Misc." />
+  <meta name="twitter:image" content="https://flagaholic.github.io/assets/og-image.png" />
+  <link rel="stylesheet" href="../styles/index.css" />
+
+  <!-- Structured Data (wtf is this?) -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"Flagaholic",
+    "url":"https://flagaholic.github.io/",
+    "logo":"https://flagaholic.github.io/assets/og-image.png",
+    "sameAs":[
+      "https://ctftime.org/team/113364",
+      "https://github.com/Flagaholic",
+      "https://discord.gg/mPqDsmQWJV"
+    ],
+    "foundingLocation":"Hong Kong",
+    "memberOf": "https://ctftime.org/team/113364"
+  }
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <img class="logo" src="../assets/teamlogo/teampfp.png" alt="Flagaholic" width="40" height="40" loading="eager" decoding="async">
+        <div>
+          <div class="mono" style="opacity:.7; font-size:12px;">Hong Kong</div>
+          <strong>Flagaholic</strong>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#tracks">Tracks</a>
+        <a href="#news">Updates (ALL WIP)</a>
+        <a href="#writeups">Writeups</a>
+        <a href="#join">Join</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="pill">Capture The Flag · HK</span>
+        <h1>We hunt flags. We build tools. We share what we learn.</h1>
+        <p>Flagaholic is a Hong Kong-based CTF team focused on Web, Pwn, Crypto, Forensics, and Misc. We compete regularly, publish concise writeups, and maintain a pragmatic toolkit for newcomers and veterans.</p>
+        <div class="cta">
+          <a class="btn primary" href="#join">Join the team</a>
+          <a class="btn" href="#writeups">Browse writeups</a>
+          <a class="btn" href="https://ctftime.org/team/113364" target="_blank" rel="noopener">CTFtime</a>
+        </div>
+        <div class="kpi">
+          <div><div class="muted">Members</div><strong>~7</strong></div>
+          <div><div class="muted">Timezone</div><strong>HKT / UTC+8</strong></div>
+          <div><div class="muted">Focus</div><strong>Rev · Misc · Web</strong></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Quick Links</h3>
+        <ul class="list">
+          <li><a href="https://github.com/Flagaholic" target="_blank" rel="noopener">GitHub org</a> <span class="tag">code</span></li>
+          <li><a href="https://ctftime.org/team/113364" target="_blank" rel="noopener">CTFtime team</a> <span class="tag">events</span></li>
+          <li><a href="https://discord.gg/mPqDsmQWJV" target="_blank" rel="noopener">Discord</a> <span class="tag">chat</span></li>
+          <li><a href="#handbook">Team Handbook (WIP)</a> <span class="tag">onboarding</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="about" class="grid" style="margin-top:18px;">
+      <div class="two card">
+        <h3>About</h3>
+        <p class="muted">We are a small HK team competing in jeopardy-style CTFs. Our goals are to sharpen skills, produce high-signal writeups, and expand the local community!</p>
+        <ul class="list">
+          <li><strong>Ethos:</strong> practical, low-cost, beginner-friendly, share-first. (what is blud talking about)</li>
+          <li><strong>Stack:</strong> Linux, pwntools, Ghidra/r2, Sage, Burp/ZAP, Docker. (again wtf is this)</li>
+          <li><strong>Writeup style:</strong> minimal scripts, exact I/O, no fluff. (??? now im even more confused)</li>
+        </ul>
+      </div>
+      <div class="two card" id="tracks">
+        <h3>Tracks</h3>
+        <ul class="list">
+          <li><strong>Web:</strong> SSRF, deserialization, templates, WAF evasion, cloud misconfig. (these are all generated) </li>
+          <li><strong>Pwn:</strong> BOF, fmtstr, UAF, ROP, ret2dlresolve, heap, OOB. (no) </li>
+          <li><strong>Crypto:</strong> RSA/AES quirks, PRNG, LFSR/MT, lattice basics. (heh?) </li>
+          <li><strong>Forensics:</strong> pcap, memory, steg, audio/FS/metadata. (no we dont) </li>
+          <li><strong>Misc/OSINT:</strong> automation, scripting, service glue. (again wtf is this) </li>
+        </ul>
+      </div>
+      <div class="three card">
+        <h3>Team</h3>
+        <ul class="list">
+          <li><span class="avatar" aria-hidden="true"></span><strong>youstube_</strong> — lead, Misc/OSINT</li>
+          <li><span class="avatar"></span><strong>WIP</strong> — WIP</li>
+          <li><span class="avatar"></span><strong>WIP</strong> — WIP</li>
+          <li><span class="avatar"></span><strong>WIP</strong> — WIP</li>
+          <li><span class="avatar"></span><strong>WIP</strong> — WIP</li>
+        </ul>
+        <div class="muted" style="font-size:13px; margin-top:8px;">I will replace this with actual handles or link to team page.</div>
+      </div>
+      <div class="three card" id="news">
+        <h3>Updates</h3>
+        <ul class="list">
+          <li><strong>[YYYY-MM-DD]</strong> Site launched on GitHub Pages.</li>
+          <!-- <li><strong>[YYYY-MM-DD]</strong> Posted writeups for <span class="mono">EventName</span>.</li> -->
+          <li><strong>[YYYY-MM-DD]</strong> Recruiting Rev/PWN solvers!</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="writeups" class="grid" style="margin-top:18px;">
+      <div class="full card">
+        <h3>Writeups</h3>
+        <p class="muted">Short, reproducible, and script-first. Store each writeup in <span class="mono">/writeups/&lt;event&gt;/&lt;challenge&gt;/README.md</span> with the final script as <span class="mono">solve.py</span> or <span class="mono">exploit.sage</span>.</p>
+        <ul class="list">
+          <!-- <li><a href="./writeups/2025-example/web-bypass/README.md">Example — Web: Template Bypass</a></li>
+          <li><a href="./writeups/2025-example/pwn-uaf/README.md">Example — Pwn: UAF → ROP</a></li>
+          <li><a href="./writeups/2025-example/crypto-rsa/README.md">Example — Crypto: RSA Padding</a></li> -->
+          <li><a href="#">WIP</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="handbook" class="grid" style="margin-top:18px;">
+      <div class="two card">
+        <h3>Operating Rules</h3>
+        <ul class="list">
+          <li>Prefer minimal scripts with exact I/O; no dead code. (AKA CHATG- WAIT MY KEYB-)</li>
+          <li>Under full RELRO, avoid GOT writes; prefer saved-RIP strategies. (im taking over now.)</li>
+          <li>Parameterize targets; avoid fragile auto-probing unless required. (i am chat gpt)</li>
+          <li>Record env: libc, PIE, ASLR, kernel, Dockerfile when relevant. (this repo is mine) </li>
+        </ul>
+      </div>
+      <div class="two card">
+        <h3>Getting Started</h3>
+        <ul class="list">
+          <li>I have seriously no idea what this is for</li>
+          <!-- <li>Clone: <span class="mono">git clone https://github.com/&lt;your-org-or-user&gt;/flagaholic</span></li>
+          <li>Read <span class="mono">/tooling/README.md</span> for setup.</li>
+          <li>Join Discord for tasks and scrims.</li> -->
+        </ul>
+      </div>
+      <div class="two card" id="join">
+        <h3>Join</h3>
+        <p class="muted">Based in Hong Kong, remote-friendly. <s>If you can solve one of our warmups or improve a writeup/tool, you’re in. </s> nah what is this :skull: </p>
+        <div class="cta">
+          <a class="btn primary" href="mailto:youstube@flagaholic.xyz">youstube@flagaholic.xyz</a>
+          <a class="btn" href="https://discord.gg/mPqDsmQWJV" target="_blank" rel="noopener">Discord</a>
+        </div>
+      </div>
+      <div class="two card">
+        <h3>Contact</h3>
+        <ul class="list">
+          <li>Email: <a href="mailto:youstube@flagaholic.xyz">youstube@flagaholic.xyz</a></li>
+          <li>GitHub: <a href="https://github.com/codestube" target="_blank" rel="noopener">@codestube</a></li>
+          <li>CTFtime: <a href="https://ctftime.org/team/113364" target="_blank" rel="noopener">Team Page</a></li>
+        </ul>
+      </div>
+      <div class="full card">
+        <h3>Credits & License</h3>
+        <p class="muted">© <span id="y">2025</span> Flagaholic. Content under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Code under <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT</a>.</p>
+      </div>
+    </section>
+
+    <footer>
+      Built with GitHub Pages.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
