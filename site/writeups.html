@@ -163,7 +163,7 @@
 								for (const [wu, files] of [...wuMap.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
 									// prefer README.md
 									const preferred = files.find(f => f.toLowerCase() === 'readme.md') || files[0];
-									const href = `./${basePath}/${encodeURIComponent(year)}/${encodeURIComponent(comp)}/${encodeURIComponent(wu)}/${encodeURIComponent(preferred)}`;
+									const href = `../${basePath}/${encodeURIComponent(year)}/${encodeURIComponent(comp)}/${encodeURIComponent(wu)}/${encodeURIComponent(preferred)}`;
 									appendWuIfNotExists(compUl, href, wu);
 								}
 							}
@@ -196,7 +196,7 @@
 							yearsSeen.add(year.name);
 							const { yearLi, yearUl } = getOrCreateYearNode(year.name);
 
-							const compsRes = await fetch(`${apiBase}/${year.name}`);
+							const compsRes = await fetch(`${apiBase}${year.name}`);
 							if (!compsRes.ok) continue;
 							const comps = await compsRes.json();
 							comps.sort((a, b) => a.name.localeCompare(b.name));
@@ -205,14 +205,14 @@
 								if (comp.type !== 'dir') continue;
 								const { compLi, compUl } = getOrCreateCompNode(yearUl, comp.name);
 
-								const wusRes = await fetch(`${apiBase}/${year.name}/${comp.name}`);
+								const wusRes = await fetch(`${apiBase}${year.name}/${comp.name}`);
 								if (!wusRes.ok) continue;
 								const wus = await wusRes.json();
 								wus.sort((a, b) => a.name.localeCompare(b.name));
 
 								for (const wu of wus) {
 									if (wu.type !== 'dir') continue;
-									const wuContentsRes = await fetch(`${apiBase}/${year.name}/${comp.name}/${wu.name}`);
+									const wuContentsRes = await fetch(`${apiBase}${year.name}/${comp.name}/${wu.name}`);
 									if (!wuContentsRes.ok) continue;
 									const wuContents = await wuContentsRes.json();
 									const mdFiles = wuContents.filter(f => f.type === 'file' && /\.md$/i.test(f.name));
