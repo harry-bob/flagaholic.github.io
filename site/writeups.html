@@ -22,88 +22,68 @@
       const apiBase = 'https://api.github.com/repos/Flagaholic/flagaholic.github.io/contents/site/writeups';
       const ul = document.getElementById('writeups-list');
 
-      const existingHrefs = new Set(
-        Array.from(ul.querySelectorAll('a'))
-          .map(a => (a.getAttribute('href') || '').trim().toLowerCase())
-          .filter(Boolean)
-      );
-      const existingTexts = new Set(
-        Array.from(ul.querySelectorAll('a'))
-          .map(a => (a.textContent || '').trim().toLowerCase())
-          .filter(Boolean)
-      );
-
-      const markExisting = (href, text) => {
-        if (href) existingHrefs.add(href.toLowerCase());
-        if (text) existingTexts.add(text.toLowerCase());
-      };
-
       try {
         const dirRes = await fetch(apiBase);
         if (!dirRes.ok) {
-          ul.insertAdjacentHTML('beforeend', '<li>Unable to load writeups, please try again later. If this issue persists, scream at us in discord and we will fix it asap</li>');
+          ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch writeups, please try again later. If this issue persists, scream at us in discord and we will fix it asap</li>');
           return;
         }
 
-        const files = await dirRes.json();
-        files.sort((a, b) => {
-          if (a.type === b.type) return a.name.localeCompare(b.name);
-          return a.type === 'dir' ? -1 : 1;
-        });
+        const years = await dirRes.json();
+        years.sort((a, b) => b.name.localeCompare(a.name));
 
-        for (const f of files) {
-          let href = '';
-          let label = '';
+        for (const year of years) {
+          if (year.type !== 'dir') continue;
+          const yearLi = document.createElement('li');
+          yearLi.textContent = year.name;
+          const yearUl = document.createElement('ul');
+          yearLi.appendChild(yearUl);
+          const compsRes = await fetch(`${apiBase}/${year.name}`);
+          const comps = await compsRes.json();
+          comps.sort((a, b) => a.name.localeCompare(b.name));
 
-          if (f.type === 'dir') {
-            const readmeRes = await fetch(`${apiBase}/${encodeURIComponent(f.name)}/README.md`);
-            href = readmeRes.ok
-              ? `./writeups/${encodeURIComponent(f.name)}/README.md`
-              : `./writeups/${encodeURIComponent(f.name)}/`;
-            label = f.name.replace(/[-_]/g, ' ');
-          } else if (f.type === 'file') {
-            if (f.name.toLowerCase() === 'readme.md') continue;
-            href = `./writeups/${encodeURIComponent(f.name)}`;
-            label = f.name;
-          } else {
-            continue;
+
+          for (const comp of comps) {
+            if (comp.type !== 'dir') continue;
+
+            const compLi = document.createElement('li');
+            compLi.textContent = comp.name.replace(/[-_]/g, ' ');
+            const compUl = document.createElement('ul');
+            compLi.appendChild(compUl);
+            const wusRes = await fetch(`${apiBase}/${year.name}/${comp.name}`);
+            const wus = await wusRes.json();
+            wus.sort((a, b) => a.name.localeCompare(b.name));
+
+            for (const wu of wus) {
+              if (wu.type !== 'dir') continue;
+              const wuContentsRes = await fetch(`${apiBase}/${year.name}/${comp.name}/${wu.name}`);
+              if (!wuContentsRes.ok) continue;
+              const wuContents = await wuContentsRes.json();
+              const mdFiles = wuContents.filter(f => f.type === 'file' && /\.md$/i.test(f.name));
+              if (mdFiles.length === 0) continue;
+
+              const preferred = mdFiles.find(f => f.name.toLowerCase() === 'readme.md') || mdFiles[0];
+
+              const wuLi = document.createElement('li');
+              const wuLink = document.createElement('a');
+              wuLink.href = `./writeups/${encodeURIComponent(year.name)}/${encodeURIComponent(comp.name)}/${encodeURIComponent(wu.name)}/${encodeURIComponent(preferred.name)}`;
+              wuLink.textContent = wu.name.replace(/[-_]/g, ' ');
+              wuLi.appendChild(wuLink);
+              compUl.appendChild(wuLi);
+            }
+
+            if (compUl.children.length > 0) {
+              yearUl.appendChild(compLi);
+            }
           }
 
-          const hrefKey = (href || '').toLowerCase();
-          const textKey = (label || '').toLowerCase();
-
-          if (existingHrefs.has(hrefKey) || existingTexts.has(textKey)) {
-            markExisting(hrefKey, textKey);
-            continue;
-          }
-
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.setAttribute('href', href);
-          a.textContent = label;
-          li.appendChild(a);
-          ul.appendChild(li);
-
-          markExisting(hrefKey, textKey);
-        }
-
-        const readmeRes = await fetch(`${apiBase}/README.md`);
-        if (readmeRes.ok) {
-          const readme = await readmeRes.json();
-          const decoded = atob(readme.content);
-          const readmeEl = document.getElementById('readme');
-          if (readmeEl) {
-            readmeEl.innerHTML = `<pre>${decoded}</pre>`;
-          } else {
-            const container = document.createElement('div');
-            container.id = 'readme';
-            container.style.marginTop = '1em';
-            container.innerHTML = `<pre>${decoded}</pre>`;
-            ul.parentElement.appendChild(container);
+          if (yearUl.children.length > 0) {
+            ul.appendChild(yearLi);
           }
         }
+
       } catch (err) {
-        ul.insertAdjacentHTML('beforeend', '<li>Error loading writeups</li>');
+        ul.insertAdjacentHTML('beforeend', '<li>Error loading writeups. If you didn\'t change anything please scream at us in discord with the console logged error :pray:</li>');
         console.error(err);
       }
     }
@@ -114,9 +94,11 @@
   <main class="main">
     <div class="card"><h1>Writeups</h1>
       <ul id="writeups-list">
+        <li><a href="./writeups/1970/TEST1/EPOCH/README.md">TESTING: OVERWRITE (EPOCH)</a></li>
+        <li><a href="https://github.com/codestube/CTF-Write-Ups">Yoo youstube got some fine ahh writeups</a></li>
         <!-- populated dynamically unless entries manually added here (idk cuz your wu is special or the auto fetch script is crying for help and can't get your writeup or sth) -->
       </ul>
-      <div id="readme" style="margin-top:1em;"></div>
+      <!-- <div id="readme" style="margin-top:1em;"></div> -->
     </div>
   </main>
 </div></body></html>
