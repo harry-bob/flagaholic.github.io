@@ -1,0 +1,43 @@
+#writeups-list {
+    list-style: none;
+    padding-left: 20px;
+}
+
+#writeups-list ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+/* do NOT add tree markers to nodes with .no-tree */
+/* Add `:not(.manual)` to exclude manual entries too, but thats just redundancy for future changes */ 
+#writeups-list li:not(.no-tree) {
+    position: relative;
+    padding: 4px 0;
+}
+
+#writeups-list li:not(.no-tree):not(:last-child)::before {
+    content: "├─";
+    position: absolute;
+    left: -20px;
+    color: #666;
+}
+
+#writeups-list li:not(.no-tree):last-child::before {
+    content: "└─";
+    position: absolute;
+    left: -20px;
+    color: #666;
+}
+
+#writeups-list li:not(.no-tree):not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 15px;
+    bottom: -15px;
+    border-left: 1px solid #666;
+}
+
+#writeups-list ul li:first-child:not(.no-tree)::after {
+    top: -4px;
+}

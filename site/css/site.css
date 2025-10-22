@@ -84,29 +84,3 @@ nav a:hover,nav a.active{
 .muted{
     color:var(--muted)
 }
-
-#writeups-list {
-    list-style: none;
-    padding-left: 0;
-}
-
-#writeups-list ul {
-    list-style: none;
-    padding-left: 20px;
-}
-
-#writeups-list li {
-    position: relative;
-    padding: 4px 0;
-}
-
-#writeups-list li::before {
-    content: "├─";
-    position: absolute;
-    left: -20px;
-    color: #666;
-}
-
-#writeups-list li:last-child::before {
-    content: "└─";
-}

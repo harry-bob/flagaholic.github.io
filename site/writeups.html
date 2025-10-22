@@ -1,104 +1,263 @@
-<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Writeups — Flagaholic</title>
-<link rel="stylesheet" href="./css/site.css">
-</head><body><div class="wrap">
-  <header>
-    <div class="brand">
-      <img class="logo" src="./assets/teamlogo/teampfp.png" alt="Flagaholic" width="40" height="40">
-      <strong>Flagaholic</strong>
-    </div>
-    <nav>
-      <a href="./index.html">Home</a>
-      <a href="./members.html">Members</a>
-      <a href="./achievements.html">Achievements</a>
-      <a href="./writeups.html" class="active">Writeups</a>
-      <a href="./contact.html">Contact</a>
-    </nav>
-  </header>
+<!doctype html>
+<html lang="en">
 
-  <script>
-    async function loadDirectory() {
-      const apiBase = 'https://api.github.com/repos/Flagaholic/flagaholic.github.io/contents/site/writeups';
-      const ul = document.getElementById('writeups-list');
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Writeups — Flagaholic</title>
+	<link rel="stylesheet" href="./css/site.css">
+	<link rel="stylesheet" href="./css/writeup_tree.css">
+</head>
 
-      try {
-        const dirRes = await fetch(apiBase);
-        if (!dirRes.ok) {
-          ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch writeups, please try again later. If this issue persists, scream at us in discord and we will fix it asap</li>');
-          return;
-        }
+<body>
+	<div class="wrap">
+		<header>
+			<div class="brand">
+				<img class="logo" src="./assets/teamlogo/teampfp.png" alt="Flagaholic" width="40" height="40">
+				<strong>Flagaholic</strong>
+			</div>
+			<nav>
+				<a href="./index.html">Home</a>
+				<a href="./members.html">Members</a>
+				<a href="./achievements.html">Achievements</a>
+				<a href="./writeups.html" class="active">Writeups</a>
+				<a href="./contact.html">Contact</a>
+			</nav>
+		</header>
 
-        const years = await dirRes.json();
-        years.sort((a, b) => b.name.localeCompare(a.name));
+		<script>
+			async function loadDirectory() {
+				const apiBase = 'https://api.github.com/repos/Flagaholic/flagaholic.github.io/contents/site/writeups/';
+				const ul = document.getElementById('writeups-list');
 
-        for (const year of years) {
-          if (year.type !== 'dir') continue;
-          const yearLi = document.createElement('li');
-          yearLi.textContent = year.name;
-          const yearUl = document.createElement('ul');
-          yearLi.appendChild(yearUl);
-          const compsRes = await fetch(`${apiBase}/${year.name}`);
-          const comps = await compsRes.json();
-          comps.sort((a, b) => a.name.localeCompare(b.name));
+				const loadingNotice = document.createElement('li');
+				loadingNotice.textContent = 'Fetching newer writeups...';
+				loadingNotice.classList.add('no-tree', 'loading');
+				ul.appendChild(loadingNotice);
 
+				const manualLinks = new Map();
+				Array.from(ul.querySelectorAll('a')).forEach(link => {
+					try {
+						manualLinks.set(new URL(link.getAttribute('href'), window.location.href).href, link.closest('li'));
+						const yearLi = link.closest('li');
+						if (yearLi) yearLi.classList.add('manual');
+					} catch (e) { }
+				});
 
-          for (const comp of comps) {
-            if (comp.type !== 'dir') continue;
+				Array.from(ul.querySelectorAll('li[data-auto="1"]')).forEach(n => n.remove());
 
-            const compLi = document.createElement('li');
-            compLi.textContent = comp.name.replace(/[-_]/g, ' ');
-            const compUl = document.createElement('ul');
-            compLi.appendChild(compUl);
-            const wusRes = await fetch(`${apiBase}/${year.name}/${comp.name}`);
-            const wus = await wusRes.json();
-            wus.sort((a, b) => a.name.localeCompare(b.name));
+				function getOrCreateYearNode(yearName) {
+					// try to find an existing manual year li by exact text
+					let existing = Array.from(ul.children).find(li =>
+						li.firstChild?.nodeType === Node.TEXT_NODE &&
+						li.firstChild.textContent.trim() === yearName
+					);
+					if (existing) {
+						// reuse, do NOT mark manual as data-auto
+						let yearUl = existing.querySelector('ul') || document.createElement('ul');
+						if (!existing.contains(yearUl)) existing.appendChild(yearUl);
+						return { yearLi: existing, yearUl };
+					}
+					// Not found -> create auto node
+					const yearLi = document.createElement('li');
+					yearLi.setAttribute('data-auto', '1');
+					yearLi.textContent = yearName;
+					const yearUl = document.createElement('ul');
+					yearLi.appendChild(yearUl);
+					ul.appendChild(yearLi);
+					return { yearLi, yearUl };
+				}
 
-            for (const wu of wus) {
-              if (wu.type !== 'dir') continue;
-              const wuContentsRes = await fetch(`${apiBase}/${year.name}/${comp.name}/${wu.name}`);
-              if (!wuContentsRes.ok) continue;
-              const wuContents = await wuContentsRes.json();
-              const mdFiles = wuContents.filter(f => f.type === 'file' && /\.md$/i.test(f.name));
-              if (mdFiles.length === 0) continue;
+				function getOrCreateCompNode(yearUl, compNameRaw) {
+					const displayName = compNameRaw.replace(/[-_]/g, ' ');
+					// try to find existing comp li inside yearUl (manual or auto)
+					let existing = Array.from(yearUl.children).find(li =>
+						li.firstChild?.nodeType === Node.TEXT_NODE &&
+						li.firstChild.textContent.trim() === displayName
+					);
+					if (existing) {
+						let compUl = existing.querySelector('ul') || document.createElement('ul');
+						if (!existing.contains(compUl)) existing.appendChild(compUl);
+						return { compLi: existing, compUl };
+					}
+					// create auto node
+					const compLi = document.createElement('li');
+					compLi.setAttribute('data-auto', '1');
+					compLi.textContent = displayName;
+					const compUl = document.createElement('ul');
+					compLi.appendChild(compUl);
+					yearUl.appendChild(compLi);
+					return { compLi, compUl };
+				}
 
-              const preferred = mdFiles.find(f => f.name.toLowerCase() === 'readme.md') || mdFiles[0];
+				function appendWuIfNotExists(compUl, href, display) {
+					const resolved = new URL(href, window.location.href).href;
+					// skip if manual entry exists for this href
+					if (manualLinks.has(resolved)) return false;
+					// skip if compUl already contains a link with same href
+					if (Array.from(compUl.querySelectorAll('a')).some(a => {
+						try { return new URL(a.getAttribute('href'), window.location.href).href === resolved; } catch (e) { return false; }
+					})) return false;
+					const wuLi = document.createElement('li');
+					wuLi.setAttribute('data-auto', '1');
+					const wuLink = document.createElement('a');
+					wuLink.href = href;
+					wuLink.textContent = display.replace(/[-_]/g, ' ');
+					wuLi.appendChild(wuLink);
+					compUl.appendChild(wuLi);
+					return true;
+				}
 
-              const wuLi = document.createElement('li');
-              const wuLink = document.createElement('a');
-              wuLink.href = `./writeups/${encodeURIComponent(year.name)}/${encodeURIComponent(comp.name)}/${encodeURIComponent(wu.name)}/${encodeURIComponent(preferred.name)}`;
-              wuLink.textContent = wu.name.replace(/[-_]/g, ' ');
-              wuLi.appendChild(wuLink);
-              compUl.appendChild(wuLi);
-            }
+				// 
+				async function fetchTreeInstead(apiBaseUrl) {
+					const match = apiBaseUrl.match(/^https:\/\/api\.github\.com\/repos\/([^/]+)\/([^/]+)\/contents\/(.+)$/);
+					if (!match) return null;
+					const owner = match[1], repo = match[2], basePath = match[3].replace(/\/$/, ''); // dont ask me why I didnt set them at the first place and snap the urls from them and instead use regex (but if u rlly wanna know its so I can use non github api urls to debug without breaking this or sth)
+					// main should always be present and this check isnt even necessary but yk its good to have a failsafe when someone messed it up
+					const branches = ['main', 'master', 'gh-pages', 'HEAD'];
+					for (const branch of branches) {
+						try {
+							const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+							const res = await fetch(treeUrl);
+							if (!res.ok) continue;
+							const json = await res.json();
+							if (!json.tree) continue;
+							// build map of directories -> md files
+							const treeFiles = json.tree.filter(e => e.type === 'blob' && e.path.startsWith(basePath + '/'));
+							return { basePath, files: treeFiles };
+						} catch (e) {
+							// ignore and try next branch
+						}
+					}
+					return null;
+				}
 
-            if (compUl.children.length > 0) {
-              yearUl.appendChild(compLi);
-            }
-          }
+				try {
+					const treeResult = await fetchTreeInstead(apiBase);
 
-          if (yearUl.children.length > 0) {
-            ul.appendChild(yearLi);
-          }
-        }
+					const yearsSeen = new Set();
 
-      } catch (err) {
-        ul.insertAdjacentHTML('beforeend', '<li>Error loading writeups. If you didn\'t change anything please scream at us in discord with the console logged error :pray:</li>');
-        console.error(err);
-      }
-    }
+					if (treeResult) {
+						const groups = new Map(); // year -> comp -> wu -> [filenames]
+						const basePath = treeResult.basePath;
+						for (const file of treeResult.files) {
+							if (!/\.md$/i.test(file.path)) continue;
+							// path parts after basePath: year/comp/wu/file.md
+							const rel = file.path.substring(basePath.length + 1).split('/');
+							if (rel.length < 4) continue; // not in expected repo layout (ie. non wu, very very WIP wu, etc)
+							const [year, comp, wu, ...rest] = rel;
+							const fname = rest.join('/');
+							groups.set(year, groups.get(year) || new Map());
+							const compMap = groups.get(year);
+							compMap.set(comp, compMap.get(comp) || new Map());
+							const wuMap = compMap.get(comp);
+							wuMap.set(wu, (wuMap.get(wu) || []).concat(fname));
+						}
 
-    document.addEventListener('DOMContentLoaded', loadDirectory);
-  </script>
+						// build DOM from groups
+						for (const [year, compMap] of [...groups.entries()].sort((a, b) => b[0].localeCompare(a[0]))) {
+							yearsSeen.add(year);
+							const { yearLi, yearUl } = getOrCreateYearNode(year);
+							for (const [comp, wuMap] of [...compMap.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+								const { compLi, compUl } = getOrCreateCompNode(yearUl, comp);
+								for (const [wu, files] of [...wuMap.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+									// prefer README.md
+									const preferred = files.find(f => f.toLowerCase() === 'readme.md') || files[0];
+									const href = `./${basePath}/${encodeURIComponent(year)}/${encodeURIComponent(comp)}/${encodeURIComponent(wu)}/${encodeURIComponent(preferred)}`;
+									appendWuIfNotExists(compUl, href, wu);
+								}
+							}
+						}
+					} else {
+						// fallback if can't fetch everything at once (this would take lots of github api fetches and its way more likely for the user to get rate-limited)
+						const dirRes = await fetch(apiBase);
+						if (!dirRes.ok) {
+							// sth bad happened, usually the user got rate limited
+							if (!manualLinks.size) {
+								if (dirRes.status === 403) {
+									ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch writeups due to github API rate limiting, please try again later.</li>');
+								} else {
+									ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch writeups, please try again later. If this issue persists, scream at us in discord and we will fix it asap</li>');
+								}
+							} else {
+								if (dirRes.status === 403) {
+									ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch newer writeups due to github API rate limiting. Please try again later, and view the statically loaded writeups instead.</li>');
+								} else {
+									ul.insertAdjacentHTML('beforeend', '<li>Unable to fetch newer writeups, please try again later. If this issue persists, scream at us in discord and we will fix it asap</li>');
+								}
+							}
+							return;
+						}
+						const years = await dirRes.json();
+						years.sort((a, b) => b.name.localeCompare(a.name));
 
-  <main class="main">
-    <div class="card"><h1>Writeups</h1>
-      <ul id="writeups-list">
-        <li><a href="./writeups/1970/TEST1/EPOCH/README.md">TESTING: OVERWRITE (EPOCH)</a></li>
-        <li><a href="https://github.com/codestube/CTF-Write-Ups">Yoo youstube got some fine ahh writeups</a></li>
-        <!-- populated dynamically unless entries manually added here (idk cuz your wu is special or the auto fetch script is crying for help and can't get your writeup or sth) -->
-      </ul>
-      <!-- <div id="readme" style="margin-top:1em;"></div> -->
-    </div>
-  </main>
-</div></body></html>
+						for (const year of years) {
+							if (year.type !== 'dir') continue;
+							yearsSeen.add(year.name);
+							const { yearLi, yearUl } = getOrCreateYearNode(year.name);
+
+							const compsRes = await fetch(`${apiBase}/${year.name}`);
+							if (!compsRes.ok) continue;
+							const comps = await compsRes.json();
+							comps.sort((a, b) => a.name.localeCompare(b.name));
+
+							for (const comp of comps) {
+								if (comp.type !== 'dir') continue;
+								const { compLi, compUl } = getOrCreateCompNode(yearUl, comp.name);
+
+								const wusRes = await fetch(`${apiBase}/${year.name}/${comp.name}`);
+								if (!wusRes.ok) continue;
+								const wus = await wusRes.json();
+								wus.sort((a, b) => a.name.localeCompare(b.name));
+
+								for (const wu of wus) {
+									if (wu.type !== 'dir') continue;
+									const wuContentsRes = await fetch(`${apiBase}/${year.name}/${comp.name}/${wu.name}`);
+									if (!wuContentsRes.ok) continue;
+									const wuContents = await wuContentsRes.json();
+									const mdFiles = wuContents.filter(f => f.type === 'file' && /\.md$/i.test(f.name));
+									if (mdFiles.length === 0) continue;
+									const preferred = mdFiles.find(f => f.name.toLowerCase() === 'readme.md') || mdFiles[0];
+									const wuPath = `./${encodeURIComponent(year.name)}/${encodeURIComponent(comp.name)}/${encodeURIComponent(wu.name)}/${encodeURIComponent(preferred.name)}`;
+									appendWuIfNotExists(compUl, `./writeups/${wuPath}`, wu.name);
+								}
+							}
+						}
+					}
+
+					Array.from(ul.querySelectorAll('li[data-auto="1"]')).forEach(li => {
+						if (li.parentElement === ul) {
+							const yearText = li.firstChild?.nodeType === Node.TEXT_NODE ? li.firstChild.textContent.trim() : null;
+							if (yearText && !yearsSeen.has(yearText)) li.remove();
+						}
+					});
+
+				} catch (err) {
+					if (!manualLinks.size) {
+						ul.insertAdjacentHTML('beforeend', '<li>Error loading writeups. If you didn\'t change anything please scream at us in discord with the console logged error :pray:</li>');
+					}
+					console.error(err);
+				} finally {
+					if (loadingNotice && loadingNotice.parentElement) loadingNotice.parentElement.removeChild(loadingNotice);
+				}
+			}
+
+			document.addEventListener('DOMContentLoaded', loadDirectory);
+		</script>
+
+		<main class="main">
+			<div class="card">
+				<h1>Writeups</h1>
+				<ul id="writeups-list">
+					<!-- populated dynamically unless entries manually added here (idk cuz your wu is special or the auto fetch script is crying for help and can't get your writeup or sth) -->
+					<!-- <li>[COATING OR ETC]<ul> -->
+					<!-- <li><a href="./writeups/YEAR/COMP/CHAL/README.md">[DISPLAY NAME]</a></li> -->
+					<!-- </ul></li> -->
+				</ul>
+				<!-- <div id="readme" style="margin-top:1em;"></div> -->
+			</div>
+		</main>
+	</div>
+</body>
+
+</html>
