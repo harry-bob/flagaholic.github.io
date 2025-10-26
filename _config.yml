@@ -2,10 +2,10 @@
 title: Flagaholic
 description: Flagaholic - HK CTF Team
 baseurl: ""
-url: "https://flagaholic.xyz"
-repository: "Flagaholic/flagaholic.github.io"
+url: https://flagaholic.xyz
+repository: Flagaholic/flagaholic.github.io
 
-avatar: "/site/assets/teamlogo/teampfp.png"
+avatar: /site/assets/teamlogo/teampfp.png
 round-avatar: false
 
 # Build settings
@@ -14,7 +14,7 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
   syntax_highlighter_opts:
-    css_class: 'highlight'
+    css_class: highlight
     span:
       line_numbers: false
     block:
@@ -42,14 +42,12 @@ plugins:
 defaults:
   -
     scope:
-      path: "site/writeups"
-      type: "pages"
+      path: site/writeups
+      type: pages
     values:
-      layout: "writeup"
+      layout: writeup
       is_writeup: true
-      toc: true
-      render_with_liquid: true
-      markdown: kramdown
+      permalink: pretty
 
 exclude:
   - Gemfile
@@ -59,9 +57,10 @@ exclude:
   - .git
   - .github
 
-# Optional: include writeups explicitly if you had them ignored elsewhere
+# just in case
 include:
-  - "site/writeups"
+  - site/writeups
+  - site/writeups/**/*.md
 
 # Processing settings
 relative_links:
