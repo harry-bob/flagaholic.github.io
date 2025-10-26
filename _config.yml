@@ -27,6 +27,7 @@ kramdown:
     preview_as_code: true
 
 # Theme & plugins
+theme: jekyll-theme-hacker
 remote_theme: pages-themes/hacker
 plugins:
   - jekyll-remote-theme
@@ -42,25 +43,21 @@ plugins:
 defaults:
   -
     scope:
-      path: site/writeups
-      type: pages
+      path: "site/writeups"
     values:
-      layout: writeup
-      is_writeup: true
-      permalink: pretty
+      layout: default
+      theme: jekyll-theme-hacker
 
 exclude:
   - Gemfile
   - Gemfile.lock
-  - node_modules
-  - vendor
-  - .git
   - .github
+  - vendor
 
 # just in case
 include:
   - site/writeups
-  - site/writeups/**/*.md
+  - "site/writeups/**/*"
 
 # Processing settings
 relative_links:
