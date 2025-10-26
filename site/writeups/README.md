@@ -1,3 +1,7 @@
 # Here is a directory storing writeups
 
-As to the directory and tree format? its WIP and tbh we don't even know :smirk:
+The directory format is
+
+    YEAR/COMP/CHAL/WU
+
+If any of you messed up the format, I will offer you a tea break and *kindly* ask you to fix it.
