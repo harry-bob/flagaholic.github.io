@@ -3,6 +3,7 @@ title: Flagaholic
 description: Flagaholic - HK CTF Team
 baseurl: ""
 url: "https://flagaholic.xyz"
+repository: "Flagaholic/flagaholic.github.io"
 
 avatar: "/site/assets/teamlogo/teampfp.png"
 round-avatar: false
@@ -25,7 +26,7 @@ kramdown:
     preview: true
     preview_as_code: true
 
-# Theme and plugin settings
+# Theme & plugins
 remote_theme: pages-themes/hacker
 plugins:
   - jekyll-remote-theme
@@ -50,13 +51,17 @@ defaults:
       render_with_liquid: true
       markdown: kramdown
 
-
-include:
-  - "site/writeups/*"
-  
 exclude:
-  - "*"
-  - "*/*"
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .github
+
+# Optional: include writeups explicitly if you had them ignored elsewhere
+include:
+  - "site/writeups"
 
 # Processing settings
 relative_links:
