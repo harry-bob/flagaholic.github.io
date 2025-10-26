@@ -27,7 +27,6 @@ kramdown:
     preview_as_code: true
 
 # Theme & plugins
-theme: jekyll-theme-hacker
 remote_theme: pages-themes/hacker
 plugins:
   - jekyll-remote-theme
@@ -46,7 +45,6 @@ defaults:
       path: "site/writeups"
     values:
       layout: default
-      theme: jekyll-theme-hacker
 
 exclude:
   - Gemfile

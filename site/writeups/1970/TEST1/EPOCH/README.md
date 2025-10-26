@@ -6,4 +6,4 @@ Thats pretty good!!
 
 **THIS IS A PLACEHOLDER WRITEUP FOR TESTING ONLY**
 
-the chal is at [chal.md] which is at (./chal.md)
+the chal is at [chal.md](./chal.md)
