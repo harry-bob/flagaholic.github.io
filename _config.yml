@@ -1,0 +1,72 @@
+# Site settings
+title: Flagaholic
+description: Flagaholic - HK CTF Team
+baseurl: ""
+url: "https://flagaholic.github.io"
+
+avatar: "/site/assets/teamlogo/teampfp.png"
+round-avatar: false
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+  hard_wrap: false
+  math_engine: mathjax
+  math_engine_opts:
+    preview: true
+    preview_as_code: true
+
+# Theme and plugin settings
+remote_theme: pages-themes/hacker
+plugins:
+  - jekyll-remote-theme
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-github-metadata
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-titles-from-headings
+
+# Other stuff
+defaults:
+  -
+    scope:
+      path: "site/writeups"
+      type: "pages"
+    values:
+      layout: "writeup"
+      is_writeup: true
+      toc: true
+      render_with_liquid: true
+      markdown: kramdown
+
+
+include:
+  - "site/writeups/*"
+  
+exclude:
+  - "*"
+  - "*/*"
+
+# Processing settings
+relative_links:
+  enabled: true
+  collections: true
+
+readme_index:
+  enabled: true
+  remove_originals: true
+
+titles_from_headings:
+  enabled: true
+  strip_title: true
