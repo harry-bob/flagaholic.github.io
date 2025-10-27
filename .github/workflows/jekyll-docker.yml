@@ -17,6 +17,10 @@ jobs:
 
       - name: Merge html headers
         run: |
+          tree
+          ls /
+          ls ./
+          ls ./site
           for file in site/*.html; do
             if [ "$(basename "$file")" != "oldindex.html" ]; then
               filename=$(basename "$file" .html)
@@ -48,9 +52,6 @@ jobs:
               
               rm -f "$tmp_header"
 
-              echo $file
-              cat $file
-              echo "---------------------"
             fi
           done
 
