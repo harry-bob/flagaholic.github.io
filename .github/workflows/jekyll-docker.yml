@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Process HTML headers
+      - name: Merge html headers
         run: |
           for file in site/*.html; do
             if [ "$(basename "$file")" != "oldindex.html" ]; then
@@ -29,12 +29,30 @@ jobs:
                 *) title="$filename";;
               esac
               
-              header=$(cat site/includes/header.html | sed "s/%TITLE%/$title/g")
+              # Create temporary files
+              tmp_file=$(mktemp)
+              tmp_header=$(mktemp)
               
-              sed -i -e "/<head>/,/<\/header>/c\\$header" "$file"
+              # Process header template
+              sed "s/%TITLE%/$title/g" site/includes/header.html > "$tmp_header"
               
-              sed -i "s/class=\"active\"//g" "$file"
-              sed -i "s|href=\"./${filename}.html\"|href=\"./${filename}.html\" class=\"active\"|g" "$file"
+              # Replace content between head and header tags
+              awk '
+                BEGIN       {p=1}
+                /<head>/   {print; system("cat '"$tmp_header"'"); p=0}
+                /<\/header>/{p=1; next}
+                p          {print}
+              ' "$file" > "$tmp_file"
+              
+              # Update nav active state
+              sed -i "s/class=\"active\"//g" "$tmp_file"
+              sed -i "s|href=\"./${filename}.html\"|href=\"./${filename}.html\" class=\"active\"|g" "$tmp_file"
+              
+              # Move processed file back
+              mv "$tmp_file" "$file"
+              
+              # Cleanup
+              rm -f "$tmp_header"
             fi
           done
 
@@ -70,6 +88,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
       
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
