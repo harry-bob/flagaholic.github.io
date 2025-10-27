@@ -29,14 +29,11 @@ jobs:
                 *) title="$filename";;
               esac
               
-              # Create temporary files
               tmp_file=$(mktemp)
               tmp_header=$(mktemp)
               
-              # Process header template
               sed "s/%TITLE%/$title/g" site/includes/header.html > "$tmp_header"
               
-              # Replace content between head and header tags
               awk '
                 BEGIN       {p=1}
                 /<head>/   {print; system("cat '"$tmp_header"'"); p=0}
@@ -44,15 +41,16 @@ jobs:
                 p          {print}
               ' "$file" > "$tmp_file"
               
-              # Update nav active state
               sed -i "s/class=\"active\"//g" "$tmp_file"
               sed -i "s|href=\"./${filename}.html\"|href=\"./${filename}.html\" class=\"active\"|g" "$tmp_file"
               
-              # Move processed file back
               mv "$tmp_file" "$file"
               
-              # Cleanup
               rm -f "$tmp_header"
+
+              echo $file
+              cat $file
+              echo "---------------------"
             fi
           done
 
