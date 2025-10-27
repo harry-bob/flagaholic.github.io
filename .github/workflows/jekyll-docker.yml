@@ -15,6 +15,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Process HTML headers
+        run: |
+          for file in site/*.html; do
+            if [ "$(basename "$file")" != "oldindex.html" ]; then
+              filename=$(basename "$file" .html)
+              case "$filename" in
+                "index") title="HK CTF Team";;
+                "members") title="Members";;
+                "achievements") title="Achievements";;
+                "writeups") title="Writeups";;
+                "contact") title="Contact";;
+                *) title="$filename";;
+              esac
+              
+              header=$(cat site/includes/header.html | sed "s/%TITLE%/$title/g")
+              
+              sed -i -e "/<head>/,/<\/header>/c\\$header" "$file"
+              
+              sed -i "s/class=\"active\"//g" "$file"
+              sed -i "s|href=\"./${filename}.html\"|href=\"./${filename}.html\" class=\"active\"|g" "$file"
+            fi
+          done
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:

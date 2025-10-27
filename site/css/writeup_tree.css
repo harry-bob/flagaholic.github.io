@@ -1,43 +1,123 @@
 #writeups-list {
     list-style: none;
-    padding-left: 20px;
+    padding-left: 0;
+    margin: 0;
 }
 
 #writeups-list ul {
     list-style: none;
     padding-left: 20px;
+    margin: 0;
 }
 
-/* do NOT add tree markers to nodes with .no-tree */
-/* Add `:not(.manual)` to exclude manual entries too, but thats just redundancy for future changes */ 
 #writeups-list li:not(.no-tree) {
     position: relative;
-    padding: 4px 0;
+    padding: 4px 0 4px 24px;
+    word-break: break-word;
 }
 
-#writeups-list li:not(.no-tree):not(:last-child)::before {
-    content: "├─";
-    position: absolute;
-    left: -20px;
-    color: #666;
-}
-
-#writeups-list li:not(.no-tree):last-child::before {
-    content: "└─";
-    position: absolute;
-    left: -20px;
-    color: #666;
-}
-
-#writeups-list li:not(.no-tree):not(:last-child)::after {
+#writeups-list li:not(.no-tree):before {
     content: "";
     position: absolute;
-    left: -15px;
-    top: 15px;
-    bottom: -15px;
-    border-left: 1px solid #666;
+    left: 0;
+    top: 12px;
+    width: 12px;
+    height: 1px;
+    background: #666;
 }
 
-#writeups-list ul li:first-child:not(.no-tree)::after {
-    top: -4px;
+#writeups-list li:not(.no-tree):after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #666;
+}
+
+#writeups-list li:not(.no-tree):last-child:after {
+    height: 12px;
+}
+
+#writeups-list > li {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+#writeups-list > li > ul > li {
+    margin: 0.5rem 0;
+    color: var(--muted);
+}
+
+#writeups-list > li > ul > li > ul > li {
+    margin: 0.25rem 0;
+}
+
+#writeups-list a {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+#writeups-list a:hover {
+    background: var(--glass);
+    text-decoration: none;
+}
+
+.loading {
+    color: var(--muted);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    #writeups-list {
+        font-size: 0.9rem;
+    }
+    
+    #writeups-list ul {
+        padding-left: 16px;
+    }
+
+    #writeups-list li:not(.no-tree) {
+        padding: 4px 0 4px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    #writeups-list ul {
+        padding-left: 12px;
+    }
+
+    #writeups-list li:not(.no-tree) {
+        padding: 4px 0 4px 16px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    #writeups-list li:not(.no-tree):before,
+    #writeups-list li:not(.no-tree):after {
+        background: #444;
+    }
+
+    #writeups-list a:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+/* Print mode */
+@media print {
+    #writeups-list li:not(.no-tree):before,
+    #writeups-list li:not(.no-tree):after {
+        display: none;
+    }
+
+    #writeups-list {
+        padding-left: 20px;
+    }
+
+    #writeups-list ul {
+        padding-left: 40px;
+    }
 }

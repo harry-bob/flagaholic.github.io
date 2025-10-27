@@ -1,29 +1,7 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Writeups — Flagaholic</title>
-	<link rel="stylesheet" href="./css/site.css">
-	<link rel="stylesheet" href="./css/writeup_tree.css">
-</head>
-
-<body>
-	<div class="wrap">
-		<header>
-			<div class="brand">
-				<img class="logo" src="./assets/teamlogo/teampfp.png" alt="Flagaholic" width="40" height="40">
-				<strong>Flagaholic</strong>
-			</div>
-			<nav>
-				<a href="./index.html">Home</a>
-				<a href="./members.html">Members</a>
-				<a href="./achievements.html">Achievements</a>
-				<a href="./writeups.html" class="active">Writeups</a>
-				<a href="./contact.html">Contact</a>
-			</nav>
-		</header>
+  </header>
 
 		<script>
 			async function loadDirectory() {
@@ -239,11 +217,17 @@
 
 		<main class="main">
 			<div class="card">
-				<h1>Writeups</h1>
+				<header class="writeups-header">
+					<h1>Writeups</h1>
+					<div class="writeups-stats">
+						<span id="writeup-count">Loading...</span>
+						<span id="filter-info"></span>
+					</div>
+				</header>
 				<ul id="writeups-list">
 					<!-- populated dynamically unless entries manually added here (idk cuz your wu is special or the auto fetch script is crying for help and can't get your writeup or sth) -->
 					<!-- <li>[COATING OR ETC]<ul> -->
-					<!-- <li><a href="./writeups/YEAR/COMP/CHAL/README.md">[DISPLAY NAME]</a></li> -->
+					<!-- <li><a href="./writeups/YEAR/COMP/CHAL/">[DISPLAY NAME]</a></li> -->
 					<!-- </ul></li> -->
 				</ul>
 				<!-- <div id="readme" style="margin-top:1em;"></div> -->
